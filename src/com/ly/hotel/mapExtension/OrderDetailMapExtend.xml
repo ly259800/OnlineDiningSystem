@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.hotel.mapExtension.OrderDetailMapExtend">
+	<resultMap type="com.ly.hotel.POextension.OrderDetailExtend" id="selectOrderDetailByIdMap">
+		<id column="orderdetail_id" property="id"/>
+		<result column="foodCount" property="foodcount"/>
+		<result column="orderId" property="orderid"/>
+		<!-- 订单详情里的食品信息 -->
+		<association property="foodExtend" javaType="com.ly.hotel.POextension.FoodExtend">
+			<id column="id" property="id"/>
+			<result column="foodName" property="foodname"/>
+			<result column="foodType" property="foodtype"/>
+			<result column="foodType_id" property="foodtypeId"/>
+			<result column="price" property="price"/>
+			<result column="mprice" property="mprice"/>
+			<result column="remark" property="remark"/>
+			<result column="img" property="img"/>
+		</association>
+	</resultMap>
+	<!-- 通过id查找订单详细信息 -->
+	<select id="selectOrderDetailById" parameterType="java.lang.Integer" resultMap="selectOrderDetailByIdMap">
+		SELECT 
+		orderdetail.foodCount,
+		orderdetail.id orderdetail_id,
+		orderdetail.orderId,
+		food.*
+		from   orderDetail,food
+		WHERE  orderdetail.food_id=food.id 
+		and    orderdetail.orderId=#{id}
+	</select>
+</mapper>

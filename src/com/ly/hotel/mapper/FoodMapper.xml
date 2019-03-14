@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.hotel.mapper.FoodMapper" >
+  <resultMap id="BaseResultMap" type="com.ly.hotel.po.Food" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="foodName" property="foodname" jdbcType="VARCHAR" />
+    <result column="foodType_id" property="foodtypeId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="mprice" property="mprice" jdbcType="DOUBLE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="foodType" property="foodtype" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, foodName, foodType_id, price, mprice, remark, img, foodType
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ly.hotel.po.FoodExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from food
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from food
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from food
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ly.hotel.po.FoodExample" >
+    delete from food
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ly.hotel.po.Food" >
+    insert into food (id, foodName, foodType_id, 
+      price, mprice, remark, 
+      img, foodType)
+    values (#{id,jdbcType=INTEGER}, #{foodname,jdbcType=VARCHAR}, #{foodtypeId,jdbcType=INTEGER}, 
+      #{price,jdbcType=DOUBLE}, #{mprice,jdbcType=DOUBLE}, #{remark,jdbcType=VARCHAR}, 
+      #{img,jdbcType=VARCHAR}, #{foodtype,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ly.hotel.po.Food" >
+    insert into food
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="foodname != null" >
+        foodName,
+      </if>
+      <if test="foodtypeId != null" >
+        foodType_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="mprice != null" >
+        mprice,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="img != null" >
+        img,
+      </if>
+      <if test="foodtype != null" >
+        foodType,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="foodname != null" >
+        #{foodname,jdbcType=VARCHAR},
+      </if>
+      <if test="foodtypeId != null" >
+        #{foodtypeId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="mprice != null" >
+        #{mprice,jdbcType=DOUBLE},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="foodtype != null" >
+        #{foodtype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ly.hotel.po.FoodExample" resultType="java.lang.Integer" >
+    select count(*) from food
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update food
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.foodname != null" >
+        foodName = #{record.foodname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.foodtypeId != null" >
+        foodType_id = #{record.foodtypeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.mprice != null" >
+        mprice = #{record.mprice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.img != null" >
+        img = #{record.img,jdbcType=VARCHAR},
+      </if>
+      <if test="record.foodtype != null" >
+        foodType = #{record.foodtype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update food
+    set id = #{record.id,jdbcType=INTEGER},
+      foodName = #{record.foodname,jdbcType=VARCHAR},
+      foodType_id = #{record.foodtypeId,jdbcType=INTEGER},
+      price = #{record.price,jdbcType=DOUBLE},
+      mprice = #{record.mprice,jdbcType=DOUBLE},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      img = #{record.img,jdbcType=VARCHAR},
+      foodType = #{record.foodtype,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ly.hotel.po.Food" >
+    update food
+    <set >
+      <if test="foodname != null" >
+        foodName = #{foodname,jdbcType=VARCHAR},
+      </if>
+      <if test="foodtypeId != null" >
+        foodType_id = #{foodtypeId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="mprice != null" >
+        mprice = #{mprice,jdbcType=DOUBLE},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="foodtype != null" >
+        foodType = #{foodtype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ly.hotel.po.Food" >
+    update food
+    set foodName = #{foodname,jdbcType=VARCHAR},
+      foodType_id = #{foodtypeId,jdbcType=INTEGER},
+      price = #{price,jdbcType=DOUBLE},
+      mprice = #{mprice,jdbcType=DOUBLE},
+      remark = #{remark,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR},
+      foodType = #{foodtype,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

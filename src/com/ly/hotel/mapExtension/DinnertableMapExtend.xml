@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.hotel.mapExtension.DinnertableMapExtend">
+	<select id="selectAllDinnertable" resultType="com.ly.hotel.POextension.DinnerTableExtend">
+		select *from dinnertable
+	</select>
+	<update id="updateDinnertable" parameterType="com.ly.hotel.POextension.DinnerTableVo">
+		update dinnertable set tablestatus=#{dinnertable.tablestatus} where id=#{dinnertable.id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.hotel.mapExtension.OrdersMapExtend">
+<resultMap type="com.ly.hotel.POextension.OrdersExtend" id="findOrdersRelateTableMap">
+	<!-- 配置映射的订单信息 -->
+	<id column="id" property="id"/>
+	<result column="orderDate" property="orderdate"/>
+	<result column="totalPrice" property="totalprice"/>
+	<result column="orderStatus" property="orderstatus"/>
+	<!-- 配置映射关联的餐桌信息 -->
+	<association property="dinnerTableExtend" javaType="com.ly.hotel.POextension.DinnerTableExtend">
+		<id column="table_id" property="id"/>
+		<result column="table_orderDate" property="orderdate"/>
+		<result column="tableName" property="tablename"/>
+		<result column="tableStatus" property="tablestatus"/>
+	</association>
+</resultMap>
+<resultMap type="com.ly.hotel.POextension.OrdersExtend" id="findOrdersRelateTableAndDetailMap" extends="findOrdersRelateTableMap">
+	<collection property="orderDetailExtends" ofType="OrderDetailExtend">
+		<id column="orderdetail_id" property="id"/>
+		<result column="foodCount" property="foodcount"/>
+		<result column="food_id" property="foodId"/>
+	</collection>
+</resultMap>
+<resultMap type="com.ly.hotel.POextension.OrdersExtend" id="findOrdersMap">
+	<!-- 配置映射的订单信息 -->
+	<id column="id" property="id"/>
+	<result column="orderDate" property="orderdate"/>
+	<result column="totalPrice" property="totalprice"/>
+	<result column="orderStatus" property="orderstatus"/>
+	<!-- 配置映射关联的餐桌信息 -->
+	<association property="dinnerTableExtend" javaType="com.ly.hotel.POextension.DinnerTableExtend">
+		<id column="table_id" property="id"/>
+		<result column="table_orderDate" property="orderdate"/>
+		<result column="tableName" property="tablename"/>
+		<result column="tableStatus" property="tablestatus"/>
+	</association>
+</resultMap>
+<resultMap type="com.ly.hotel.POextension.DinnerTableExtend" id="findFoodinTableMap">
+	<id column="dinnertable_id" property="id"/>
+	<result column="table_orderDate" property="orderdate"/>
+	<result column="tableName" property="tablename"/>
+	<result column="tableStatus" property="tablestatus"/>
+	<collection property="ordersExtends" ofType="com.ly.hotel.POextension.OrdersExtend">
+		<id column="id" property="id"/>
+		<result column="orderDate" property="orderdate"/>
+		<result column="totalPrice" property="totalprice"/>
+		<result column="orderStatus" property="orderstatus"/>
+		<!-- orders中的订单详情属性 -->
+		<collection property="orderDetailExtends" ofType="OrderDetailExtend">
+			<id column="orderdetail_id" property="id"/>
+			<result column="foodCount" property="foodcount"/>
+			<!-- 订单详情里的食品信息 -->
+			<association property="foodExtend" javaType="com.ly.hotel.POextension.FoodExtend">
+				<id column="food_id" property="id"/>
+				<result column="foodName" property="foodname"/>
+				<result column="foodType" property="foodtype"/>
+				<result column="price" property="price"/>
+			</association>
+		</collection>
+	</collection>
+</resultMap>
+<resultMap type="com.ly.hotel.POextension.OrdersExtend" id="selectOrdersByIdMap">
+	<id column="id" property="id"/>
+		<result column="orderDate" property="orderdate"/>
+		<result column="totalPrice" property="totalprice"/>
+		<result column="orderStatus" property="orderstatus"/>
+		<!-- orders中的订单详情属性 -->
+		<collection property="orderDetailExtends" ofType="OrderDetailExtend">
+			<id column="orderdetail_id" property="id"/>
+			<result column="foodCount" property="foodcount"/>
+			<!-- 订单详情里的食品信息 -->
+			<association property="foodExtend" javaType="com.ly.hotel.POextension.FoodExtend">
+				<id column="food_id" property="id"/>
+				<result column="foodName" property="foodname"/>
+				<result column="foodType" property="foodtype"/>
+				<result column="price" property="price"/>
+			</association>
+		</collection>
+</resultMap>
+    <!-- 查找餐桌上的订单 -->
+	<select id="findOrdersRelateTable" parameterType="java.lang.Integer" resultMap="findOrdersRelateTableMap">
+		SELECT orders.*,
+		dinnertable.orderDate table_orderDate,
+		dinnertable.tableName,
+		dinnertable.tableStatus
+		from  orders,dinnertable 
+		WHERE  orders.table_id=dinnertable.id
+		and dinnertable.id=#{id}
+	</select>
+	<!-- 查找所有餐桌上的订单 -->
+	<select id="findOrders" resultMap="findOrdersMap">
+		SELECT orders.*,
+		dinnertable.orderDate table_orderDate,
+		dinnertable.tableName,
+		dinnertable.tableStatus
+		from  orders,dinnertable 
+		WHERE  orders.table_id=dinnertable.id
+	</select>
+	<!-- 查找餐桌上的订单和订单详细 -->
+	<select id="findOrdersRelateTableAndDetail" resultMap="findOrdersRelateTableAndDetailMap">
+		SELECT 
+	    orders.*,
+		dinnertable.orderDate table_orderDate,
+		dinnertable.tableName,
+		dinnertable.tableStatus,
+		orderdetail.foodCount,
+		orderdetail.id orderdetail_id,
+		orderdetail.food_id
+		from  orders,dinnertable,orderDetail
+		WHERE  orders.table_id=dinnertable.id and orders.id=orderdetail.orderId
+	</select>
+	<!-- 查找餐桌上的食品信息 -->
+	<select id="findFoodinTable" parameterType="java.lang.Integer" resultMap="findFoodinTableMap">
+		SELECT 
+	    orders.*,
+		dinnertable.orderDate table_orderDate,
+		dinnertable.tableName,
+		dinnertable.tableStatus,
+		dinnertable.id dinnertable_id,
+		orderdetail.foodCount,
+		orderdetail.id orderdetail_id,
+		food.id food_id,
+		food.foodName,
+		food.foodType,
+		food.price
+		from  orders,dinnertable,orderDetail,food
+		WHERE  orders.table_id=dinnertable.id and orders.id=orderdetail.orderId and orderdetail.food_id=food.id 
+		and dinnertable.id=#{id}
+	</select>
+	<!-- 通过id查找订单信息 -->
+	<select id="selectOrdersById" resultMap="selectOrdersByIdMap">
+		SELECT 
+		orders.*,
+		orderdetail.foodCount,
+		orderdetail.id orderdetail_id,
+		food.id food_id,
+		food.foodName,
+		food.foodType,
+		food.price
+		from  orders,dinnertable,orderDetail,food
+		WHERE  orders.id=orderdetail.orderId and orderdetail.food_id=food.id 
+		and orders.table_id=#{id}
+	</select>
+</mapper>
