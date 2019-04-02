@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+    <mvc:resources location="/admin/detail/style/css/" mapping="/admin/detail/style/css/**"></mvc:resources>
+    <mvc:resources location="/admin/detail/style/images/" mapping="/admin/detail/style/images/**"></mvc:resources>
+    <mvc:resources location="/admin/detail/style/js/" mapping="/admin/detail/style/js/**"></mvc:resources>
+    <mvc:resources location="/app/detail/style/css/" mapping="/app/detail/style/css/**"></mvc:resources>
+    <mvc:resources location="/app/detail/style/images/" mapping="/app/detail/style/images/**"></mvc:resources>
+    <mvc:resources location="/app/detail/style/js/" mapping="/app/detail/style/js/**"></mvc:resources>
+   	<!-- 注解映射器和注解适配器 -->
+   	<mvc:annotation-driven validator="validator" ></mvc:annotation-driven>
+    <!-- 自定义参数绑定 -->
+   <!--  conversion-service="conversionService"
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+       	 转换器
+        <property name="converters">
+            <set>
+                日期类型转换
+                <bean class="com.ly.hotel.controller.conterver.DateConverter"/>
+            </set>
+        </property>
+    </bean> -->
+    <!-- 
+  	对于注解的handler可以单个配置	  
+   	但是实际开发过程中用组件扫描-->
+    <context:component-scan base-package="com.ly.hotel.controller"/>
+	<!-- 视图解析器 -->
+	<bean id="viewResolver"
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	    <!-- jsp路径的前缀和后缀 -->
+	    <property name="prefix" value="/"/>
+	    <property name="suffix" value=".jsp"/>
+	</bean>
+	<!-- 文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置文件上传的最大尺寸为5MB -->
+		<property name="maxUploadSize">
+			<value>5242880</value>
+		</property>
+	</bean>
+	<!-- 校验器 -->  
+    <bean id="validator"  
+        class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">  
+        <!-- 校验器-->  
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator" />  
+        <!-- 指定校验使用的资源文件，如果不指定则默认使用classpath下的ValidationMessages.properties -->  
+        <property name="validationMessageSource" ref="messageSource" />  
+    </bean>  
+    <!-- 校验错误信息配置文件 -->  
+    <bean id="messageSource"  
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">  
+        <!-- 资源文件名-->  
+        <property name="basenames">     
+            <list>      
+            <value>classpath:CustomValidationMessages</value>  
+            </list>     
+        </property>  
+        <!-- 资源文件编码格式 -->  
+        <property name="fileEncodings" value="utf-8" />  
+        <!-- 对资源文件内容缓存时间，单位秒 -->  
+        <property name="cacheSeconds" value="120" />  
+    </bean>  
+</beans>
